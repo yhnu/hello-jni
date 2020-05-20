@@ -23,6 +23,17 @@
  *
  *   hello-jni/app/src/main/java/com/example/hellojni/HelloJni.java
  */
+ 
+static __attribute__ ((noinline)) void test1()
+{
+	malloc(1024*1024);
+}
+
+static __attribute__ ((noinline)) void test2()
+{
+	malloc(1024*1024*10);
+}
+
 JNIEXPORT jstring JNICALL
 Java_com_example_hellojni_HelloJni_stringFromJNI( JNIEnv* env, jobject thiz )
 {
@@ -57,6 +68,11 @@ Java_com_example_hellojni_HelloJni_stringFromJNI( JNIEnv* env, jobject thiz )
 #else
 #define ABI "unknown"
 #endif
-
+	for(int i=0;i<100;i++)
+	{
+		test1();
+		test2();
+		usleep(1000);
+	}
     return (*env)->NewStringUTF(env, "Hello from JNI !  Compiled with ABI " ABI ".");
 }
